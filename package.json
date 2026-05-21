@@ -1,0 +1,38 @@
+{
+    "name": "graphql-blog-app",
+    "version": "1.0.0",
+    "description": "A graphql api for users to write and read others blogs",
+    "main": "index.js",
+    "type": "module",
+    "scripts": {
+        "start": "node src/index.js",
+        "dev": "nodemon src/index.js",
+        "format": "prettier --write ."
+    },
+    "keywords": [
+        "graphql",
+        "blog-app",
+        "mongoose",
+        "apollo-server",
+        "express",
+        "mongodb"
+    ],
+    "author": "Tharun Korivi",
+    "license": "ISC",
+    "devDependencies": {
+        "nodemon": "^3.1.14"
+    },
+    "dependencies": {
+        "@apollo/server": "^5.5.1",
+        "bcryptjs": "^3.0.3",
+        "body-parser": "^2.2.2",
+        "cors": "^2.8.6",
+        "dataloader": "^2.2.3",
+        "dotenv": "^17.4.2",
+        "express": "^4.22.2",
+        "graphql": "^16.14.0",
+        "jsonwebtoken": "^9.0.3",
+        "mongoose": "^9.6.2",
+        "prettier": "^3.8.3"
+    }
+}
