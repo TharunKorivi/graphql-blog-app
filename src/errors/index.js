@@ -11,6 +11,17 @@ export const throwUnauthenticated = () => {
     });
 };
 
+export const throwInvalidID = (resource) => {
+    throw new GraphQLError(`Invalid ${resource} ID`, {
+        extensions: {
+            code: "INVALID_ID",
+            http: {
+                status: 400,
+            },
+        },
+    });
+};
+
 export const throwForbidden = (action = "perform this action") => {
     throw new GraphQLError(`Not allowed to ${action}`, {
         extensions: {
@@ -75,6 +86,19 @@ export const throwInternalServerError = () => {
             code: "INTERNAL_SERVER_ERROR",
             http: {
                 status: 500,
+            },
+        },
+    });
+};
+
+export const throwAtleastOneFieldRequired = (
+    message = "Atleast one field required"
+) => {
+    throw new GraphQLError(message, {
+        extensions: {
+            code: "AT_LEAST_ONE_FIELD_REQUIRED",
+            http: {
+                status: 400,
             },
         },
     });

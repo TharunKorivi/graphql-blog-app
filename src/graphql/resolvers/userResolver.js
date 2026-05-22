@@ -11,25 +11,19 @@ const httpOptions = {
 export const userResolver = {
     Query: {
         me: async (parent, args, context) => {
-
-            
-            console.log(context.req.userId);
-
-            if (!context.req.userId) throwUnauthenticated();
-            return await authService.getMe(context.req.userId.toString());
+            if (!context.userId) throwUnauthenticated();
+            return await authService.getMe(context.userId.toString());
         },
 
-        user: (parent, args) => {
-            return authService.getMe(args.id);
+        user: (parent, { id }) => {
+            return authService.getMe(id);
         },
     },
 
     Mutation: {
-        signup: async (parent, data, context) => {
-            console.log("Hello");
-
+        signup: async (parent, { input }, context) => {
             const { refreshToken, accessToken, user } =
-                await authService.signup(data);
+                await authService.signup(input);
 
             context.res.cookie("refreshToken", refreshToken, httpOptions);
 
@@ -40,7 +34,7 @@ export const userResolver = {
         },
 
         login: async (parent, data, context) => {
-            const { refreshToken, accessToken, user } =
+            const { accessToken, refreshToken, user } =
                 await authService.login(data);
 
             context.res.cookie("refreshToken", refreshToken, httpOptions);
@@ -52,11 +46,11 @@ export const userResolver = {
         },
 
         logout: async (parent, args, context) => {
-            if (context.req.userId) {
+            if (context.userId) {
                 throwUnauthenticated();
             }
 
-            await authService.invalidateSession(context.req.userId);
+            await authService.invalidateSession(context.userId);
 
             context.res.clearCookie("refreshToken", httpOptions);
 

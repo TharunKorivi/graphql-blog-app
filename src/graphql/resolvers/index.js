@@ -1,7 +1,7 @@
 import { userResolver } from "./userResolver.js";
+import postResolver from "./postResolver.js";
+import commentResolver from "./commentResolver.js";
 
-export const resolvers = {
-    Query: { ...userResolver.Query },
-    Mutation: { ...userResolver.Mutation },
-    User: userResolver.User,
-};
+const resolvers = [userResolver, postResolver, commentResolver];
+
+export default resolvers;

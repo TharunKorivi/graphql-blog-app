@@ -10,9 +10,12 @@ import { expressMiddleware } from "@as-integrations/express5";
 
 import { authMiddleware } from "./middlewares/auth.middleware.js";
 
-import { typeDefs } from "./graphql/typeDefs/index.js";
+import typeDefs from "./graphql/typeDefs/index.js";
 
-import { resolvers } from "./graphql/resolvers/index.js";
+import resolvers from "./graphql/resolvers/index.js";
+
+import { createUserLoader } from "./loaders/user.loaders.js";
+import { createCommentLoader } from "./loaders/comment.loaders.js";
 
 const app = express();
 
@@ -21,7 +24,6 @@ app.use(express.json());
 app.use(
     cors({
         origin: process.env.CORS_ORIGIN,
-
         credentials: true,
     })
 );
@@ -30,24 +32,32 @@ app.use(cookieParser());
 
 app.use(authMiddleware);
 
-const KNOWN_CODES = [
-    "UNAUTHENTICATED",
-    "FORBIDDEN",
-    "NOT_FOUND",
-    "BAD_USER_INPUT",
-    "DUPLICATE_FIELD",
-    "INVALID_CREDENTIALS",
-];
-
 const server = new ApolloServer({
     typeDefs,
     resolvers,
 
     formatError: (error) => {
+        const KNOWN_CODES = [
+            "UNAUTHENTICATED",
+
+            "FORBIDDEN",
+
+            "NOT_FOUND",
+
+            "BAD_REQUEST",
+
+            "DUPLICATE_FIELD",
+
+            "INVALID_CREDENTIALS",
+
+            "AT_LEAST_ONE_FIELD_REQUIRED",
+
+            "INVALID_ID",
+        ];
         const code = error.extensions?.code;
 
         if (!KNOWN_CODES.includes(code)) {
-            console.error("Unexpected error:", error.originalError);
+            console.error("Unexpected Error:", error);
 
             return {
                 message: "Internal server error",
@@ -58,7 +68,13 @@ const server = new ApolloServer({
             };
         }
 
-        return error;
+        return {
+            message: error.message,
+
+            extensions: {
+                code,
+            },
+        };
     },
 });
 
@@ -72,10 +88,11 @@ app.use(
             return {
                 req,
                 res,
-
                 userId: req.userId,
-
-                user: req.user,
+                loaders: {
+                    userLoader: createUserLoader(),
+                    commentLoader: createCommentLoader(),
+                },
             };
         },
     })

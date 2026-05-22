@@ -1,5 +1,7 @@
 import gql from "graphql-tag";
 import userTypeDefs from "./userTypeDefs.js";
+import postTypeDefs from "./postTypeDefs.js";
+import commentTypeDefs from "./commentTypeDefs.js";
 
 const base = gql`
     type Query {
@@ -11,10 +13,6 @@ const base = gql`
     }
 `;
 
-const helloTypeDef = gql`
-    extend type Query {
-        hello: String
-    }
-`;
+const typeDefs = [base, userTypeDefs, postTypeDefs, commentTypeDefs];
 
-export const typeDefs = [base, userTypeDefs, helloTypeDef];
+export default typeDefs;

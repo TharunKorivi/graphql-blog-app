@@ -1,3 +1,4 @@
+import { GraphQLError } from "graphql";
 import {
     throwDuplicateField,
     throwInvalidCredentials,
@@ -19,11 +20,7 @@ export const authService = {
             throwDuplicateField("username");
         }
 
-        console.log(existingUsername);
-
         const existingEmail = await userRepository.findByEmail(email);
-
-        console.log(existingUsername);
 
         if (existingEmail) {
             throwDuplicateField("email");
@@ -34,8 +31,6 @@ export const authService = {
             email,
             password,
         });
-
-        console.log(user);
 
         const accessToken = generateAccessToken(user._id);
 
@@ -73,6 +68,17 @@ export const authService = {
 
     updateUser: async (userId, data) => {
         if (!userId) throwUnauthenticated();
+        data.username = data.username?.trim();
+        data.bio = data.bio?.trim();
+        if (!data.username && !data.bio)
+            throw new GraphQLError(`Username or bio required`, {
+                extensions: {
+                    code: "AT_LEAST_ONE_FIELD_REQUIRED",
+                    http: {
+                        status: 400,
+                    },
+                },
+            });
         if (data.username) {
             const taken = await userRepository.findByUsername(data.username);
             if (taken && taken._id.toString() !== userId)

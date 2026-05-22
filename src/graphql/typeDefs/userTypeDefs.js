@@ -14,17 +14,19 @@ export default gql`
         token: String!
     }
 
+    input CreateUserInput {
+        username: String!
+        email: String!
+        password: String!
+    }
+
     extend type Query {
         me: User
         user(id: ID!): User
     }
 
     extend type Mutation {
-        signup(
-            username: String!
-            email: String!
-            password: String!
-        ): AuthPayload!
+        signup(input: CreateUserInput!): AuthPayload!
         login(email: String!, password: String!): AuthPayload!
         updateProfile(username: String, bio: String): User!
         logout: Boolean!

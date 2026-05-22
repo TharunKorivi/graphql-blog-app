@@ -1,6 +1,10 @@
 import { User } from "../models/user.model.js";
 
 export const userRepository = {
+    findByIds: (ids) =>
+        User.find({
+            _id: { $in: ids },
+        }),
     findByEmail: (email) => {
         return User.findOne({ email });
     },

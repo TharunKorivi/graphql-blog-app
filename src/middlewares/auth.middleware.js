@@ -18,7 +18,7 @@ export const authMiddleware = (req, res, next) => {
 
         req.userId = payload.userId;
     } catch (error) {
-        console.log(error.message);
+        console.error(error.message);
         req.userId = null;
     }
 
