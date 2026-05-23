@@ -146,7 +146,7 @@ npm run dev
 # Seed Database
 
 ```bash
-node run dev
+npm run seed
 ```
 
 This inserts:
