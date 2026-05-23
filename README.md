@@ -206,8 +206,8 @@ Authorization: Bearer <token>
 mutation {
     signup(
         input: {
-            username: "tharun"
-            email: "tharun@test.com"
+            username: "tharun",
+            email: "tharun@test.com",
             password: "password"
         }
     ) {
@@ -245,8 +245,8 @@ mutation {
 ```graphql
 mutation {
     createPost(
-        title: "GraphQL Basics"
-        body: "Learning GraphQL deeply"
+        title: "GraphQL Basics",
+        body: "Learning GraphQL deeply",
         tags: ["graphql", "backend"]
     ) {
         id
